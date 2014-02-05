@@ -1,5 +1,5 @@
 // Box protocol definitions - revision 1
-option java_package = "org.kontalk.client";
+option java_package = "org.kontalk.legacy.client";
 option java_outer_classname = "BoxProtocol";
 option optimize_for = LITE_RUNTIME;
 

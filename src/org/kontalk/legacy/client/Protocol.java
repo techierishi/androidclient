@@ -280,7 +280,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.AuthenticateRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.AuthenticateRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.AuthenticateRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.AuthenticateRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -586,7 +586,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.AuthenticateResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.AuthenticateResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.AuthenticateResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.AuthenticateResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1049,7 +1049,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ServerInfo, Builder>
         implements org.kontalk.legacy.client.Protocol.ServerInfoOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ServerInfo.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ServerInfo.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1687,7 +1687,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.LoginRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.LoginRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.LoginRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.LoginRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2204,7 +2204,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.LoginResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.LoginResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.LoginResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.LoginResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2656,7 +2656,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.MessagePostRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.MessagePostRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.MessagePostRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.MessagePostRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3326,7 +3326,7 @@ public final class Protocol {
           com.google.protobuf.GeneratedMessageLite.Builder<
             org.kontalk.legacy.client.Protocol.MessagePostResponse.MessageSent, Builder>
           implements org.kontalk.legacy.client.Protocol.MessagePostResponse.MessageSentOrBuilder {
-        // Construct using org.kontalk.client.Protocol.MessagePostResponse.MessageSent.newBuilder()
+        // Construct using org.kontalk.legacy.client.Protocol.MessagePostResponse.MessageSent.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -3715,7 +3715,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.MessagePostResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.MessagePostResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.MessagePostResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.MessagePostResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4475,7 +4475,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.NewMessage, Builder>
         implements org.kontalk.legacy.client.Protocol.NewMessageOrBuilder {
-      // Construct using org.kontalk.client.Protocol.NewMessage.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.NewMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5331,7 +5331,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.Mailbox, Builder>
         implements org.kontalk.legacy.client.Protocol.MailboxOrBuilder {
-      // Construct using org.kontalk.client.Protocol.Mailbox.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.Mailbox.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5704,7 +5704,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.MessageAckRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.MessageAckRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.MessageAckRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.MessageAckRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6152,7 +6152,7 @@ public final class Protocol {
           com.google.protobuf.GeneratedMessageLite.Builder<
             org.kontalk.legacy.client.Protocol.MessageAckResponse.Entry, Builder>
           implements org.kontalk.legacy.client.Protocol.MessageAckResponse.EntryOrBuilder {
-        // Construct using org.kontalk.client.Protocol.MessageAckResponse.Entry.newBuilder()
+        // Construct using org.kontalk.legacy.client.Protocol.MessageAckResponse.Entry.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -6491,7 +6491,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.MessageAckResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.MessageAckResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.MessageAckResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.MessageAckResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -7025,7 +7025,7 @@ public final class Protocol {
           com.google.protobuf.GeneratedMessageLite.Builder<
             org.kontalk.legacy.client.Protocol.ReceiptMessage.Entry, Builder>
           implements org.kontalk.legacy.client.Protocol.ReceiptMessage.EntryOrBuilder {
-        // Construct using org.kontalk.client.Protocol.ReceiptMessage.Entry.newBuilder()
+        // Construct using org.kontalk.legacy.client.Protocol.ReceiptMessage.Entry.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -7414,7 +7414,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ReceiptMessage, Builder>
         implements org.kontalk.legacy.client.Protocol.ReceiptMessageOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ReceiptMessage.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ReceiptMessage.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -7804,7 +7804,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.RegistrationRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.RegistrationRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.RegistrationRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.RegistrationRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -8292,7 +8292,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.RegistrationResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.RegistrationResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.RegistrationResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.RegistrationResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -8762,7 +8762,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ValidationRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.ValidationRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ValidationRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ValidationRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -9156,7 +9156,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ValidationResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.ValidationResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ValidationResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ValidationResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -9509,7 +9509,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.UserLookupRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.UserLookupRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.UserLookupRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.UserLookupRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -9975,7 +9975,7 @@ public final class Protocol {
           com.google.protobuf.GeneratedMessageLite.Builder<
             org.kontalk.legacy.client.Protocol.UserLookupResponse.Entry, Builder>
           implements org.kontalk.legacy.client.Protocol.UserLookupResponse.EntryOrBuilder {
-        // Construct using org.kontalk.client.Protocol.UserLookupResponse.Entry.newBuilder()
+        // Construct using org.kontalk.legacy.client.Protocol.UserLookupResponse.Entry.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -10388,7 +10388,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.UserLookupResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.UserLookupResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.UserLookupResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.UserLookupResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -10850,7 +10850,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.FileUploadResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.FileUploadResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.FileUploadResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.FileUploadResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -11238,7 +11238,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ServerInfoRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.ServerInfoRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ServerInfoRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ServerInfoRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -11773,7 +11773,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ServerInfoResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.ServerInfoResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ServerInfoResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ServerInfoResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -12424,7 +12424,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.UserInfoUpdateRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.UserInfoUpdateRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.UserInfoUpdateRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.UserInfoUpdateRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -12855,7 +12855,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.UserInfoUpdateResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.UserInfoUpdateResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.UserInfoUpdateResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.UserInfoUpdateResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -13201,7 +13201,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.UserPresenceSubscribeRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.UserPresenceSubscribeRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.UserPresenceSubscribeRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.UserPresenceSubscribeRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -13596,7 +13596,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.UserPresenceSubscribeResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.UserPresenceSubscribeResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.UserPresenceSubscribeResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.UserPresenceSubscribeResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -13982,7 +13982,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.UserPresence, Builder>
         implements org.kontalk.legacy.client.Protocol.UserPresenceOrBuilder {
-      // Construct using org.kontalk.client.Protocol.UserPresence.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.UserPresence.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -14427,7 +14427,7 @@ public final class Protocol {
           com.google.protobuf.GeneratedMessageLite.Builder<
             org.kontalk.legacy.client.Protocol.ServerList.Entry, Builder>
           implements org.kontalk.legacy.client.Protocol.ServerList.EntryOrBuilder {
-        // Construct using org.kontalk.client.Protocol.ServerList.Entry.newBuilder()
+        // Construct using org.kontalk.legacy.client.Protocol.ServerList.Entry.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -14813,7 +14813,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ServerList, Builder>
         implements org.kontalk.legacy.client.Protocol.ServerListOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ServerList.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ServerList.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -15218,7 +15218,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.Ping, Builder>
         implements org.kontalk.legacy.client.Protocol.PingOrBuilder {
-      // Construct using org.kontalk.client.Protocol.Ping.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.Ping.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -15501,7 +15501,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.Pong, Builder>
         implements org.kontalk.legacy.client.Protocol.PongOrBuilder {
-      // Construct using org.kontalk.client.Protocol.Pong.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.Pong.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -15761,7 +15761,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ValidationCodeRequest, Builder>
         implements org.kontalk.legacy.client.Protocol.ValidationCodeRequestOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ValidationCodeRequest.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ValidationCodeRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -16094,7 +16094,7 @@ public final class Protocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.Protocol.ValidationCodeResponse, Builder>
         implements org.kontalk.legacy.client.Protocol.ValidationCodeResponseOrBuilder {
-      // Construct using org.kontalk.client.Protocol.ValidationCodeResponse.newBuilder()
+      // Construct using org.kontalk.legacy.client.Protocol.ValidationCodeResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }

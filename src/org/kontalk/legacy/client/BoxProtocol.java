@@ -259,7 +259,7 @@ public final class BoxProtocol {
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.kontalk.legacy.client.BoxProtocol.BoxContainer, Builder>
         implements org.kontalk.legacy.client.BoxProtocol.BoxContainerOrBuilder {
-      // Construct using org.kontalk.client.BoxProtocol.BoxContainer.newBuilder()
+      // Construct using org.kontalk.legacy.client.BoxProtocol.BoxContainer.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
