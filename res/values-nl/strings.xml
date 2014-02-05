@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">Kontalk</string>
+  <string name="app_name">Kontalk Legacy</string>
   <string name="app_description">Het vrije &amp; open source chatprogramma gemaakt door vrijwilligers</string>
   <string name="service_name">Berichtencentrum</string>
   <string name="authenticator_name">Authenticatieservice</string>

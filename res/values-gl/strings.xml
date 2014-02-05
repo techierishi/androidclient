@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">Kontalk</string>
+  <string name="app_name">Kontalk Legacy</string>
   <string name="app_description">Rede de mensaxería instantanea dirixida pola comunidade</string>
   <string name="service_name">Área de mensaxe</string>
   <string name="authenticator_name">Servizo de autenticación</string>

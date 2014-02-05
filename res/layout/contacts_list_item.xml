@@ -17,7 +17,7 @@
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 
-<org.kontalk.ui.ContactsListItem xmlns:android="http://schemas.android.com/apk/res/android"
+<org.kontalk.legacy.ui.ContactsListItem xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:paddingRight="10dip" >
@@ -54,4 +54,4 @@
         android:layout_alignWithParentIfMissing="true"
         android:ellipsize="end" />
 
-</org.kontalk.ui.ContactsListItem>
+</org.kontalk.legacy.ui.ContactsListItem>

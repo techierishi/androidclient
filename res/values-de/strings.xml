@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">Kontalk</string>
+  <string name="app_name">Kontalk Legacy</string>
   <string name="app_description">gemeinschaftlich betriebenes Sofortnachrichtennetzwerk</string>
   <string name="service_name">Nachrichtenzentrale</string>
   <string name="authenticator_name">Authentifizierungs Service</string>

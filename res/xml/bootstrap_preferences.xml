@@ -76,8 +76,8 @@
             android:key="pref_about"
             android:title="@string/pref_about">
             <intent
-             android:targetClass="org.kontalk.ui.AboutActivity"
-             android:targetPackage="org.kontalk" />
+             android:targetClass="org.kontalk.legacy.ui.AboutActivity"
+             android:targetPackage="org.kontalk.legacy" />
         </Preference>
     </PreferenceCategory>
 

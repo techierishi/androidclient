@@ -18,9 +18,9 @@
  -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.kontalk"
-      android:versionCode="26"
-      android:versionName="2.2.9"
+      package="org.kontalk.legacy"
+      android:versionCode="27"
+      android:versionName="2.2.9.1"
       android:installLocation="internalOnly">
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -43,9 +43,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <!-- internal permissions -->
-    <permission android:name="org.kontalk.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission android:name="org.kontalk.legacy.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 
-    <uses-permission android:name="org.kontalk.permission.C2D_MESSAGE" />
+    <uses-permission android:name="org.kontalk.legacy.permission.C2D_MESSAGE" />
 
     <!-- do not make telephony and touchscreen mandatory -->
     <uses-feature android:name="android.hardware.telephony" android:required="false"/>
@@ -83,11 +83,11 @@
         <!-- Content providers -->
         <provider android:name=".provider.MessagesProvider"
             android:exported="false"
-            android:authorities="org.kontalk.messages"/>
+            android:authorities="org.kontalk.legacy.messages"/>
 
         <provider android:name=".provider.UsersProvider"
             android:exported="false"
-            android:authorities="org.kontalk.users"/>
+            android:authorities="org.kontalk.legacy.users"/>
 
         <!-- Broadcast receivers -->
         <receiver android:name=".service.SystemBootStartup"
@@ -107,7 +107,7 @@
           <intent-filter>
             <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-            <category android:name="org.kontalk" />
+            <category android:name="org.kontalk.legacy" />
           </intent-filter>
         </receiver>
 
@@ -147,7 +147,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.item/org.kontalk.user"
+                <data android:mimeType="vnd.android.cursor.item/org.kontalk.legacy.user"
                     android:host="com.android.contacts"/>
             </intent-filter>
             <intent-filter>

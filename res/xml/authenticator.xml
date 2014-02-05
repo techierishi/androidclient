@@ -18,7 +18,7 @@
  -->
 
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="org.kontalk.account"
+    android:accountType="org.kontalk.legacy.account"
     android:icon="@drawable/ic_launcher"
     android:smallIcon="@drawable/ic_launcher"
     android:label="@string/app_name"
