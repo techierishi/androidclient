@@ -25,6 +25,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -43,6 +44,7 @@ public class CreditsFragment extends Fragment {
         mWebView.getSettings().setJavaScriptEnabled(false);
         mWebView.getSettings().setLoadsImagesAutomatically(true);
         mWebView.setWebViewClient(new WebViewClient());
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         mWebView.loadUrl(url);
         return view;
 	}
