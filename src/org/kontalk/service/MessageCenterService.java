@@ -92,6 +92,7 @@ import org.kontalk.data.Contact;
 import org.kontalk.message.AttachmentComponent;
 import org.kontalk.message.CompositeMessage;
 import org.kontalk.message.ImageComponent;
+import org.kontalk.message.LocationComponent;
 import org.kontalk.message.MessageComponent;
 import org.kontalk.message.RawComponent;
 import org.kontalk.message.TextComponent;
@@ -459,6 +460,7 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
         pm.addExtensionProvider(BitsOfBinary.ELEMENT_NAME, BitsOfBinary.NAMESPACE, new BitsOfBinary.Provider());
         pm.addExtensionProvider(SubscribePublicKey.ELEMENT_NAME, SubscribePublicKey.NAMESPACE, new SubscribePublicKey.Provider());
         pm.addExtensionProvider(E2EEncryption.ELEMENT_NAME, E2EEncryption.NAMESPACE, new E2EEncryption.Provider());
+        pm.addExtensionProvider(UserLocation.ELEMENT_NAME, UserLocation.NAMESPACE, new UserLocation.Provider());
     }
 
     @Override
@@ -1308,6 +1310,13 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
         	if (txt != null) {
         		content = txt.getContent().getBytes();
         		mime = TextComponent.MIME_TYPE;
+        	}
+
+        	LocationComponent loc = (LocationComponent) msg.getComponent(LocationComponent.class);
+
+        	if (loc != null) {
+                values.put(Messages.GEO_LATITUDE, loc.getLatitude());
+                values.put(Messages.GEO_LONGITUDE, loc.getLongitude());
         	}
 
         	checkAttachment = true;
@@ -2543,7 +2552,14 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                         			attachment.getClass(), mime)));
                         }
                         */
+                    }
 
+                    PacketExtension _location = m.getExtension(UserLocation.ELEMENT_NAME, UserLocation.NAMESPACE);
+                    if (_location != null && _location instanceof UserLocation) {
+                        UserLocation location = (UserLocation) _location;
+                        msg.addComponent(new LocationComponent
+                                (location.getLatitude(),
+                                 location.getLongitude()));
                     }
 
                     if (msg != null) {

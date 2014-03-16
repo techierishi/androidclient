@@ -730,6 +730,14 @@ public class ComposeMessageFragment extends ListFragment implements
 		}
 	}
 
+	private void viewMap(CompositeMessage msg) {
+        LocationComponent loc = (LocationComponent) msg.getComponent(LocationComponent.class);
+        // String geo="http://maps.google.com/maps?q=loc:"+(loc.getLatitude()+1) + "," + loc.getLongitude() + "("+mConversation.getContact().getName()+")";
+        String geo="geo:"+ loc.getLatitude() + "," + loc.getLongitude() + "?q="+loc.getLatitude() + "," + loc.getLongitude()+"("+mConversation.getContact().getName()+")";
+        Intent i=new Intent(Intent.ACTION_VIEW, Uri.parse(geo));
+        startActivity(i);
+	}
+
 	/** Listener for attachment type chooser. */
     @Override
     public void onClick(int id) {
@@ -921,10 +929,11 @@ public class ComposeMessageFragment extends ListFragment implements
 	private static final int MENU_COPY_TEXT = 3;
 	private static final int MENU_DECRYPT = 4;
 	private static final int MENU_OPEN = 5;
-	private static final int MENU_DOWNLOAD = 6;
-	private static final int MENU_CANCEL_DOWNLOAD = 7;
-	private static final int MENU_DETAILS = 8;
-	private static final int MENU_DELETE = 9;
+	private static final int MENU_VIEWMAP = 6;
+	private static final int MENU_DOWNLOAD = 7;
+	private static final int MENU_CANCEL_DOWNLOAD = 8;
+	private static final int MENU_DETAILS = 9;
+	private static final int MENU_DELETE = 10;
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
@@ -991,7 +1000,12 @@ public class ComposeMessageFragment extends ListFragment implements
 	                menu.add(CONTEXT_MENU_GROUP_ID, id, id, string);
 			    }
 
+			}
 
+			LocationComponent location = (LocationComponent) msg.getComponent(LocationComponent.class);
+			if (location != null) {
+			    // TODO i18n
+                menu.add(CONTEXT_MENU_GROUP_ID, MENU_VIEWMAP, MENU_VIEWMAP, "View on map");
 			}
 
 		}
@@ -1098,17 +1112,13 @@ public class ComposeMessageFragment extends ListFragment implements
 			}
 
 			case MENU_OPEN: {
-			    LocationComponent loc = (LocationComponent) msg.getComponent(LocationComponent.class);
-			    if (loc != null) {
-			        // String geo="http://maps.google.com/maps?q=loc:"+(loc.getLatitude()+1) + "," + loc.getLongitude() + "("+mConversation.getContact().getName()+")";
-			        String geo="geo:"+ loc.getLatitude() + "," + loc.getLongitude() + "?q="+(loc.getLatitude()+1) + "," + loc.getLongitude()+"("+mConversation.getContact().getName()+")";
-			        Intent i=new Intent(Intent.ACTION_VIEW, Uri.parse(geo));
-			        startActivity(i);
-			    }
-			    else {
-			        openFile(msg);
-			    }
+		        openFile(msg);
 				return true;
+			}
+
+			case MENU_VIEWMAP: {
+			    viewMap(msg);
+                return true;
 			}
 		}
 
