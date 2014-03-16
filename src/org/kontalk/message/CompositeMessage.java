@@ -72,6 +72,8 @@ public class CompositeMessage {
         Messages.ATTACHMENT_LENGTH,
         Messages.ATTACHMENT_ENCRYPTED,
         Messages.ATTACHMENT_SECURITY_FLAGS,
+        Messages.GEO_LATITUDE,
+        Messages.GEO_LONGITUDE,
     };
 
     // these indexes matches MESSAGE_LIST_PROJECTION
@@ -95,6 +97,8 @@ public class CompositeMessage {
     public static final int COLUMN_ATTACHMENT_LENGTH = 17;
     public static final int COLUMN_ATTACHMENT_ENCRYPTED = 18;
     public static final int COLUMN_ATTACHMENT_SECURITY_FLAGS = 19;
+    public static final int COLUMN_GEO_LATITUDE= 20;
+    public static final int COLUMN_GEO_LONGITUDE= 21;
 
     public static final String MSG_ID = "org.kontalk.message.id";
     public static final String MSG_SENDER = "org.kontalk.message.sender";
@@ -339,6 +343,13 @@ public class CompositeMessage {
 	        	if (att != null)
 	        		addComponent(att);
 
+	        }
+
+	        if (!c.isNull(COLUMN_GEO_LATITUDE)) {
+	            double lat = c.getDouble(COLUMN_GEO_LATITUDE);
+	            double lon = c.getDouble(COLUMN_GEO_LONGITUDE);
+	            LocationComponent location = new LocationComponent(lat, lon);
+	            addComponent(location);
 	        }
 
         }

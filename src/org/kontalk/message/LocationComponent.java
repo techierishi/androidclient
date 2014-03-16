@@ -18,46 +18,26 @@
 
 package org.kontalk.message;
 
+import org.kontalk.crypto.Coder;
 
 
 
 /**
- * A generic message component.
+ * A location message component.
  * @author Daniele Ricci
+ * @author Andrea Cappelli
  */
-public abstract class MessageComponent<T> {
+public class LocationComponent extends MessageComponent <Location> {
 
-	protected T mContent;
-    protected long mLength;
-	protected boolean mEncrypted;
-	protected int mSecurityFlags;
-
-	public MessageComponent(T content, long length, boolean encrypted, int securityFlags) {
-		mContent = content;
-		mLength = length;
-		mEncrypted = encrypted;
-		mSecurityFlags = securityFlags;
-	}
-
-	public T getContent() {
-		return mContent;
-	}
-
-	public void setContent(T content) {
-		this.mContent = content;
-	}
-
-	public long getLength() {
-        return mLength;
+    public LocationComponent(double lat, double lon) {
+        super(new Location(lat,lon), 0, false, Coder.SECURITY_CLEARTEXT);
     }
 
-	public boolean isEncrypted() {
-		return mEncrypted;
-	}
+    public double getLatitude() {
+        return mContent.getLatitude();
+    }
 
-	public int getSecurityFlags() {
-		return mSecurityFlags;
-	}
-
-
+    public double getLongitude() {
+        return mContent.getLongitude();
+    }
 }

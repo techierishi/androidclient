@@ -60,6 +60,7 @@ import org.jivesoftware.smackx.packet.LastActivity;
 import org.kontalk.BuildConfig;
 import org.kontalk.GCMIntentService;
 import org.kontalk.Kontalk;
+import org.kontalk.R;
 import org.kontalk.authenticator.Authenticator;
 import org.kontalk.client.AckServerReceipt;
 import org.kontalk.client.BitsOfBinary;
@@ -79,13 +80,14 @@ import org.kontalk.client.StanzaGroupExtension;
 import org.kontalk.client.SubscribePublicKey;
 import org.kontalk.client.UploadExtension;
 import org.kontalk.client.UploadInfo;
+import org.kontalk.client.UserLocation;
 import org.kontalk.client.VCard4;
 import org.kontalk.crypto.Coder;
 import org.kontalk.crypto.DecryptException;
 import org.kontalk.crypto.PGP;
+import org.kontalk.crypto.PGP.PGPKeyPairRing;
 import org.kontalk.crypto.PersonalKey;
 import org.kontalk.crypto.X509Bridge;
-import org.kontalk.crypto.PGP.PGPKeyPairRing;
 import org.kontalk.data.Contact;
 import org.kontalk.message.AttachmentComponent;
 import org.kontalk.message.CompositeMessage;
@@ -94,12 +96,12 @@ import org.kontalk.message.MessageComponent;
 import org.kontalk.message.RawComponent;
 import org.kontalk.message.TextComponent;
 import org.kontalk.message.VCardComponent;
-import org.kontalk.provider.UsersProvider;
 import org.kontalk.provider.MyMessages.CommonColumns;
 import org.kontalk.provider.MyMessages.Messages;
 import org.kontalk.provider.MyMessages.Threads;
 import org.kontalk.provider.MyMessages.Threads.Requests;
 import org.kontalk.provider.MyUsers.Users;
+import org.kontalk.provider.UsersProvider;
 import org.kontalk.service.KeyPairGeneratorService.KeyGeneratedReceiver;
 import org.kontalk.service.KeyPairGeneratorService.PersonalKeyRunnable;
 import org.kontalk.service.XMPPConnectionHelper.ConnectionHelperListener;
@@ -109,7 +111,6 @@ import org.kontalk.util.MediaStorage;
 import org.kontalk.util.MessageUtils;
 import org.kontalk.util.RandomString;
 import org.kontalk.util.XMPPUtils;
-import org.kontalk.R;
 import org.spongycastle.openpgp.PGPException;
 import org.spongycastle.openpgp.PGPPublicKey;
 import org.spongycastle.openpgp.PGPPublicKeyRing;
@@ -1173,6 +1174,13 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                 m.addExtension(new OutOfBandData(fetchUrl, mime, length));
             }
 
+            // add location data if present
+            if (data.containsKey("org.kontalk.message.geo_lat")) {
+                double lat = data.getDouble("org.kontalk.message.geo_lat");
+                double lon = data.getDouble("org.kontalk.message.geo_lon");
+                m.addExtension(new UserLocation(lat, lon));
+            }
+
             if (encrypt) {
                 byte[] toMessage = null;
                 try {
@@ -1535,6 +1543,21 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
         i.putExtra("org.kontalk.message.media.uri", localUri.toString());
         i.putExtra("org.kontalk.message.length", length);
         i.putExtra("org.kontalk.message.preview.path", previewPath);
+        i.putExtra("org.kontalk.message.chatState", ChatState.active.name());
+        context.startService(i);
+    }
+
+    /** Sends  a location message */
+    public static void sendLocationMessage(final Context context, String userId, String text, double lat, double lon, boolean encrypt, long msgId) {
+        Intent i = new Intent(context, MessageCenterService.class);
+        i.setAction(MessageCenterService.ACTION_MESSAGE);
+        i.putExtra("org.kontalk.message.msgId", msgId);
+        i.putExtra("org.kontalk.message.mime", TextComponent.MIME_TYPE);
+        i.putExtra("org.kontalk.message.toUser", userId);
+        i.putExtra("org.kontalk.message.body", text);
+        i.putExtra("org.kontalk.message.geo_lat", lat);
+        i.putExtra("org.kontalk.message.geo_lon", lon);
+        i.putExtra("org.kontalk.message.encrypt", encrypt);
         i.putExtra("org.kontalk.message.chatState", ChatState.active.name());
         context.startService(i);
     }

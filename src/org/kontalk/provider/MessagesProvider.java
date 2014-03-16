@@ -25,8 +25,8 @@ import java.util.List;
 import org.kontalk.crypto.Coder;
 import org.kontalk.provider.MyMessages.CommonColumns;
 import org.kontalk.provider.MyMessages.Messages;
-import org.kontalk.provider.MyMessages.Threads;
 import org.kontalk.provider.MyMessages.Messages.Fulltext;
+import org.kontalk.provider.MyMessages.Threads;
 import org.kontalk.provider.MyMessages.Threads.Conversations;
 
 import android.annotation.TargetApi;
@@ -109,7 +109,9 @@ public class MessagesProvider extends ContentProvider {
             "att_encrypted INTEGER NOT NULL DEFAULT 0," +
             "att_security_flags INTEGER NOT NULL DEFAULT 0," +
 
-            // TODO geo_lat, geo_lon, ...
+            // location data
+            "geo_lat NUMBER," +
+            "geo_lon NUMBER," +
 
             // whole content encrypted
             "encrypted INTEGER NOT NULL DEFAULT 0, " +
@@ -1194,6 +1196,9 @@ public class MessagesProvider extends ContentProvider {
         messagesProjectionMap.put(Messages.ATTACHMENT_LENGTH, Messages.ATTACHMENT_LENGTH);
         messagesProjectionMap.put(Messages.ATTACHMENT_ENCRYPTED, Messages.ATTACHMENT_ENCRYPTED);
         messagesProjectionMap.put(Messages.ATTACHMENT_SECURITY_FLAGS, Messages.ATTACHMENT_SECURITY_FLAGS);
+
+        messagesProjectionMap.put(Messages.GEO_LATITUDE, Messages.GEO_LATITUDE);
+        messagesProjectionMap.put(Messages.GEO_LONGITUDE, Messages.GEO_LONGITUDE);
 
         messagesProjectionMap.put(Messages.UNREAD, Messages.UNREAD);
         messagesProjectionMap.put(Messages.DIRECTION, Messages.DIRECTION);

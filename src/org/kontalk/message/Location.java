@@ -18,46 +18,26 @@
 
 package org.kontalk.message;
 
-
-
-
 /**
- * A generic message component.
- * @author Daniele Ricci
+ * Location data.
+ * @author Andrea Cappelli
  */
-public abstract class MessageComponent<T> {
 
-	protected T mContent;
-    protected long mLength;
-	protected boolean mEncrypted;
-	protected int mSecurityFlags;
+public class Location {
 
-	public MessageComponent(T content, long length, boolean encrypted, int securityFlags) {
-		mContent = content;
-		mLength = length;
-		mEncrypted = encrypted;
-		mSecurityFlags = securityFlags;
-	}
+    private final double mLatitude;
+    private final double mLongitude;
 
-	public T getContent() {
-		return mContent;
-	}
-
-	public void setContent(T content) {
-		this.mContent = content;
-	}
-
-	public long getLength() {
-        return mLength;
+    public Location(double lat,double lon) {
+        mLatitude = lat;
+        mLongitude = lon;
     }
 
-	public boolean isEncrypted() {
-		return mEncrypted;
-	}
+    public double getLatitude () {
+        return mLatitude;
+    }
 
-	public int getSecurityFlags() {
-		return mSecurityFlags;
-	}
-
-
+    public double getLongitude () {
+        return mLongitude;
+    }
 }

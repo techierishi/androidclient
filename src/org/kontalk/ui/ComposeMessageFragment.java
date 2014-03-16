@@ -40,6 +40,7 @@ import org.kontalk.data.Conversation;
 import org.kontalk.message.AttachmentComponent;
 import org.kontalk.message.CompositeMessage;
 import org.kontalk.message.ImageComponent;
+import org.kontalk.message.LocationComponent;
 import org.kontalk.message.MessageComponent;
 import org.kontalk.message.TextComponent;
 import org.kontalk.message.VCardComponent;
@@ -74,6 +75,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -130,6 +134,7 @@ public class ComposeMessageFragment extends ListFragment implements
     private static final int CONTEXT_MENU_ATTACHMENT = 1;
     private static final int ATTACHMENT_ACTION_PICTURE = 1;
     private static final int ATTACHMENT_ACTION_CONTACT = 2;
+    private static final int ATTACHMENT_ACTION_LOCATION = 3;
     private IconContextMenu attachmentMenu;
 
 	private MessageListQueryHandler mQueryHandler;
@@ -463,10 +468,20 @@ public class ComposeMessageFragment extends ListFragment implements
 
 	private final class TextMessageThread extends Thread {
 	    private final String mText;
+        private double mLatitude;
+        private double mLongitude;
+        private boolean mLocation;
 
 	    TextMessageThread(String text) {
 	        mText = text;
 	    }
+
+        TextMessageThread(String text, double lat, double lon) {
+            this(text);
+            mLatitude = lat;
+            mLongitude = lon;
+            mLocation = true;
+        }
 
 	    @Override
 	    public void run() {
@@ -493,6 +508,11 @@ public class ComposeMessageFragment extends ListFragment implements
                 values.put(Messages.DIRECTION, Messages.DIRECTION_OUT);
                 values.put(Messages.TIMESTAMP, System.currentTimeMillis());
                 values.put(Messages.STATUS, Messages.STATUS_SENDING);
+                //location data
+                if (mLocation) {
+                    values.put(Messages.GEO_LATITUDE, mLatitude);
+                    values.put(Messages.GEO_LONGITUDE, mLongitude);
+                }
                 // of course outgoing messages are not encrypted in database
                 values.put(Messages.ENCRYPTED, false);
                 values.put(Messages.SECURITY_FLAGS, encrypted ? Coder.SECURITY_BASIC : Coder.SECURITY_CLEARTEXT);
@@ -517,10 +537,19 @@ public class ComposeMessageFragment extends ListFragment implements
                     }
 
                     // send message!
-                    MessageCenterService.sendTextMessage(getActivity(),
-                        userId, mText, MessagingPreferences
-                            .getEncryptionEnabled(getActivity()),
-                        ContentUris.parseId(newMsg));
+                    if (!mLocation) {
+                        MessageCenterService.sendTextMessage(getActivity(),
+                                userId, mText, MessagingPreferences
+                                    .getEncryptionEnabled(getActivity()),
+                                ContentUris.parseId(newMsg));
+                    }
+                    else {
+                        MessageCenterService.sendLocationMessage(getActivity(),
+                                userId, "Location", mLatitude, mLongitude, MessagingPreferences
+                                    .getEncryptionEnabled(getActivity()),
+                                ContentUris.parseId(newMsg));
+                    }
+
                 }
                 else {
                     getActivity().runOnUiThread(new Runnable() {
@@ -711,6 +740,9 @@ public class ComposeMessageFragment extends ListFragment implements
             case ATTACHMENT_ACTION_CONTACT:
                 selectContactAttachment();
                 break;
+            case ATTACHMENT_ACTION_LOCATION:
+                selectLocationAttachment();
+                break;
         }
     }
 
@@ -729,6 +761,7 @@ public class ComposeMessageFragment extends ListFragment implements
 	        attachmentMenu = new IconContextMenu(getActivity(), CONTEXT_MENU_ATTACHMENT);
 	        attachmentMenu.addItem(getResources(), R.string.attachment_picture, R.drawable.ic_launcher_gallery, ATTACHMENT_ACTION_PICTURE);
 	        attachmentMenu.addItem(getResources(), R.string.attachment_contact, R.drawable.ic_launcher_contacts, ATTACHMENT_ACTION_CONTACT);
+	        attachmentMenu.addItem(getResources(), "Location",R.drawable.ic_attach_location, ATTACHMENT_ACTION_LOCATION);
 	        attachmentMenu.setOnClickListener(this);
 	    }
 	    attachmentMenu.createMenu(getString(R.string.menu_attachment)).show();
@@ -772,6 +805,35 @@ public class ComposeMessageFragment extends ListFragment implements
 	private void selectContactAttachment() {
         Intent i = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
         startActivityForResult(i, SELECT_ATTACHMENT_CONTACT);
+	}
+
+	private void selectLocationAttachment() {
+	    final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        String provider = locationManager.getBestProvider(criteria, false);
+        LocationListener l = new LocationListener() {
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+
+            public void onLocationChanged(android.location.Location location) {
+                Log.w(TAG, "location = " + location.getLatitude() + ", " + location.getLongitude());
+
+                locationManager.removeUpdates(this);
+
+                double lat = location.getLatitude();
+                double lon = location.getLongitude();
+                new TextMessageThread("Location", lat, lon).start();
+            }
+        };
+
+        locationManager.requestLocationUpdates(provider, 0, 0, l);
 	}
 
 	private void showSmileysPopup(View anchor) {
@@ -1036,7 +1098,16 @@ public class ComposeMessageFragment extends ListFragment implements
 			}
 
 			case MENU_OPEN: {
-				openFile(msg);
+			    LocationComponent loc = (LocationComponent) msg.getComponent(LocationComponent.class);
+			    if (loc != null) {
+			        // String geo="http://maps.google.com/maps?q=loc:"+(loc.getLatitude()+1) + "," + loc.getLongitude() + "("+mConversation.getContact().getName()+")";
+			        String geo="geo:"+ loc.getLatitude() + "," + loc.getLongitude() + "?q="+(loc.getLatitude()+1) + "," + loc.getLongitude()+"("+mConversation.getContact().getName()+")";
+			        Intent i=new Intent(Intent.ACTION_VIEW, Uri.parse(geo));
+			        startActivity(i);
+			    }
+			    else {
+			        openFile(msg);
+			    }
 				return true;
 			}
 		}
