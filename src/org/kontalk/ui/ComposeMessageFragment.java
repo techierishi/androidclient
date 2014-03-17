@@ -818,7 +818,25 @@ public class ComposeMessageFragment extends ListFragment implements
 	private void selectLocationAttachment() {
 	    final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // TODO i18n
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                   .setCancelable(false)
+                   .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                       public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                           startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                       }
+                   })
+                   .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                       public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            dialog.cancel();
+                       }
+                   });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
+        criteria.setAccuracy(criteria.ACCURACY_FINE);
         String provider = locationManager.getBestProvider(criteria, false);
         LocationListener l = new LocationListener() {
             public void onStatusChanged(String provider, int status, Bundle extras) {
