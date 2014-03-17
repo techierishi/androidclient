@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,6 +68,7 @@ import org.kontalk.client.BitsOfBinary;
 import org.kontalk.client.BlockingCommand;
 import org.kontalk.client.E2EEncryption;
 import org.kontalk.client.EndpointServer;
+import org.kontalk.client.HttpDownload;
 import org.kontalk.client.KontalkConnection;
 import org.kontalk.client.OutOfBandData;
 import org.kontalk.client.Ping;
@@ -108,6 +110,7 @@ import org.kontalk.service.KeyPairGeneratorService.PersonalKeyRunnable;
 import org.kontalk.service.XMPPConnectionHelper.ConnectionHelperListener;
 import org.kontalk.ui.MessagingNotification;
 import org.kontalk.ui.MessagingPreferences;
+import org.kontalk.util.GMStaticUrlBuilder;
 import org.kontalk.util.MediaStorage;
 import org.kontalk.util.MessageUtils;
 import org.kontalk.util.RandomString;
@@ -1374,6 +1377,40 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
         }
         catch (SQLiteConstraintException econstr) {
             // duplicated message, skip it
+        }
+
+        // Start MapDownload for Location Messagges
+        LocationComponent _location = (LocationComponent) msg.getComponent(LocationComponent.class);
+        if (_location instanceof LocationComponent) {
+            LocationComponent location = _location;
+            GMStaticUrlBuilder url = new GMStaticUrlBuilder()
+            .setCenter(location.getLatitude(), location.getLongitude())
+            .setMapType("roadmap")
+            .setMarker("red", '\0', location.getLatitude(), location.getLongitude())
+            .setSensor(false)
+            .setSize(600, 300)
+            .setZoom(13);
+
+             final File dest = new File(getCacheDir(), String.format(Locale.US, "%f", location.getLatitude())
+                     + "_"
+                     + String.format(Locale.US, "%f", location.getLongitude())+ ".png");
+             final Uri _uri = msgUri;
+
+             new HttpDownload(url.toString(), dest, new Runnable() {
+                 public void run() {
+                     ContentValues v = new ContentValues(1);
+                     v.put(Messages.ATTACHMENT_PREVIEW_PATH, dest.toString());
+
+                     getContentResolver().update(_uri, v, null, null);
+                 }
+             },
+
+             new Runnable() {
+                 public void run() {
+                     // TODO
+                 }
+             })
+             .start();
         }
 
         // mark sender as registered in the users database
