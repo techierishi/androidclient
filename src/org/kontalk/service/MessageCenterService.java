@@ -731,8 +731,11 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
 
             	Uri msgUri = intent.getParcelableExtra(EXTRA_MESSAGE);
 
-                ContentValues values = new ContentValues(1);
+            	boolean encrypted = MessagingPreferences.getEncryptionEnabled(this);
+
+                ContentValues values = new ContentValues(2);
                 values.put(Messages.STATUS, Messages.STATUS_SENDING);
+                values.put(Messages.SECURITY_FLAGS, encrypted ? Coder.SECURITY_BASIC : Coder.SECURITY_CLEARTEXT);
                 getContentResolver().update(msgUri, values, null, null);
 
                 // FIXME shouldn't we resend just the above message?
@@ -885,12 +888,6 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
         Presence p = new Presence(Presence.Type.available);
         if (status != null)
             p.setStatus(status);
-
-        if (mPushNotifications) {
-            String pushRegId = GCMRegistrar.getRegistrationId(this);
-            if (!TextUtils.isEmpty(pushRegId))
-                p.addExtension(new PushRegistration(pushRegId));
-        }
 
         sendPacket(p);
     }
@@ -1691,8 +1688,12 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                     // already registered - send registration id to server
                     setPushRegistrationId(mPushRegistrationId);
             }
+            catch (UnsupportedOperationException unsupported) {
+                // GCM not supported
+            }
             catch (Exception e) {
-                // nothing happens...
+                // this exception should be reported
+                Log.w(TAG, "error setting up GCM", e);
             }
 
         }
@@ -1990,6 +1991,9 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
 	    	            String fingerprint = PGP.getFingerprint(_publicKey);
 	    	            UsersProvider.setUserKey(MessageCenterService.this, userId,
 	    	            	_publicKey, fingerprint);
+
+                		// invalidate cache for this user
+                		Contact.invalidate(userId);
     	            }
     	            catch (Exception e) {
     	            	// TODO warn user
@@ -2117,7 +2121,7 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                         }
 
                 		ContentResolver cr = getContentResolver();
-                		ContentValues values = new ContentValues(3);
+                		ContentValues values = new ContentValues(4);
 
                 		// insert public key into the users table
                 		values.put(Users.HASH, from);
@@ -2135,9 +2139,10 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                 		values.clear();
                 		values.put(CommonColumns.PEER, from);
                 		values.put(CommonColumns.TIMESTAMP, System.currentTimeMillis());
+                		cr.insert(Requests.CONTENT_URI, values);
 
-                		Uri req = cr.insert(Requests.CONTENT_URI, values);
-                		Log.v(TAG, "request created " + req);
+                		// fire up a notification
+                		MessagingNotification.chatInvitation(MessageCenterService.this, from);
                 	}
 
                 }

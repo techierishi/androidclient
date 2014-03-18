@@ -283,7 +283,7 @@
     <string name="security_error_public_key_unavail">\u0020(public key unavailable)</string>
 
     <string name="title_invitation">Chat invitation</string>
-    <string name="text_invitation_known">Request by\n%1$s &lt;%2$s&gt;\n(%3$s)\nFingerprint: %2$s</string>
+    <string name="text_invitation_known">Request by\n%1$s &lt;%2$s&gt;\n(%3$s)\nFingerprint: %4$s</string>
     <string name="text_invitation_unknown">Request by\n%1$s\nFingerprint: %2$s</string>
     <string name="button_accept">Accept</string>
     <string name="button_block">Block</string>
@@ -300,5 +300,9 @@
     <string name="warn_no_personal_key">Unable to load personal key. Disable encryption from preferences to send message anyway.</string>
     <string name="warn_no_public_key">Unable to find a public key for this user. Try refreshing your contact list or disable encryption from preferences to send message anyway.</string>
     <string name="warn_encryption_failed">Unable to encrypt message. Disable encryption from preferences to send message anyway.</string>
+
+    <string name="pref_sync_sim_contacts">Sync from SIM contacts</string>
+    <string name="pref_title_off_sync_sim_contacts">Do not include SIM contacts when checking for registered users</string>
+    <string name="pref_title_on_sync_sim_contacts">SIM contacts are also included when checking for registered users</string>
 
 </resources>

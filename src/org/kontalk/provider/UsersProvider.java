@@ -53,6 +53,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.RawContacts;
 import android.util.Log;
 
 
@@ -378,11 +379,19 @@ public class UsersProvider extends ContentProvider {
                 // query for phone numbers
             	// FIXME this might return null on some devices
                 phones = cr.query(Phone.CONTENT_URI,
-                    new String[] { Phone.NUMBER, Phone.DISPLAY_NAME, Phone.LOOKUP_KEY, Phone.CONTACT_ID },
-                    null, null, null);
+                    new String[] { Phone.NUMBER, Phone.DISPLAY_NAME, Phone.LOOKUP_KEY, Phone.CONTACT_ID, RawContacts.ACCOUNT_TYPE },
+                    // this will filter out RawContacts from Kontalk
+                    RawContacts.ACCOUNT_TYPE + " IS NULL OR " +
+                    RawContacts.ACCOUNT_TYPE + "<> ?",
+                    new String[] { Authenticator.ACCOUNT_TYPE }, null);
 
                 while (phones.moveToNext()) {
                     String number = phones.getString(0);
+                    String name = phones.getString(1);
+
+                    // buggy provider - skip entry
+                    if (name == null || number == null)
+                        continue;
 
                     // remove dial prefix first
                     if (dialPrefix != null && number.startsWith(dialPrefix))
@@ -409,7 +418,7 @@ public class UsersProvider extends ContentProvider {
                         stm.clearBindings();
                         stm.bindString(1, hash);
                         stm.bindString(2, number);
-                        stm.bindString(3, phones.getString(1));
+                        stm.bindString(3, name);
                         stm.bindString(4, phones.getString(2));
                         stm.bindLong(5, phones.getLong(3));
                         stm.executeInsert();
@@ -422,69 +431,71 @@ public class UsersProvider extends ContentProvider {
 
                 phones.close();
 
-                // query for SIM contacts
-                // column selection doesn't work because of a bug in Android
-                // TODO this is a bit unclear...
-                try {
-                    phones = cr.query(Uri.parse("content://icc/adn/"),
-                        null, null, null, null);
-                }
-                catch (Exception e) {
-                    /*
-                    On some phones:
-                    java.lang.NullPointerException
-                        at android.os.Parcel.readException(Parcel.java:1431)
-                        at android.database.DatabaseUtils.readExceptionFromParcel(DatabaseUtils.java:185)
-                        at android.database.DatabaseUtils.readExceptionFromParcel(DatabaseUtils.java:137)
-                        at android.content.ContentProviderProxy.query(ContentProviderNative.java:366)
-                        at android.content.ContentResolver.query(ContentResolver.java:372)
-                        at android.content.ContentResolver.query(ContentResolver.java:315)
-                     */
-                    Log.w(TAG, "unable to retrieve SIM contacts", e);
-                    phones = null;
-                }
+                if (MessagingPreferences.getSyncSIMContacts(getContext())) {
+                    // query for SIM contacts
+                    // column selection doesn't work because of a bug in Android
+                    // TODO this is a bit unclear...
+                    try {
+                        phones = cr.query(Uri.parse("content://icc/adn/"),
+                            null, null, null, null);
+                    }
+                    catch (Exception e) {
+                        /*
+                        On some phones:
+                        java.lang.NullPointerException
+                            at android.os.Parcel.readException(Parcel.java:1431)
+                            at android.database.DatabaseUtils.readExceptionFromParcel(DatabaseUtils.java:185)
+                            at android.database.DatabaseUtils.readExceptionFromParcel(DatabaseUtils.java:137)
+                            at android.content.ContentProviderProxy.query(ContentProviderNative.java:366)
+                            at android.content.ContentResolver.query(ContentResolver.java:372)
+                            at android.content.ContentResolver.query(ContentResolver.java:315)
+                         */
+                        Log.w(TAG, "unable to retrieve SIM contacts", e);
+                        phones = null;
+                    }
 
-                if (phones != null) {
-                    while (phones.moveToNext()) {
-                        String name = phones.getString(phones.getColumnIndex("name"));
-                        String number = phones.getString(phones.getColumnIndex("number"));
-                        // buggy firmware - skip entry
-                        if (name == null || number == null)
-                            continue;
+                    if (phones != null) {
+                        while (phones.moveToNext()) {
+                            String name = phones.getString(phones.getColumnIndex("name"));
+                            String number = phones.getString(phones.getColumnIndex("number"));
+                            // buggy firmware - skip entry
+                            if (name == null || number == null)
+                                continue;
 
-                        // remove dial prefix first
-                        if (dialPrefix != null && number.startsWith(dialPrefix))
-                            number = number.substring(dialPrefixLen);
+                            // remove dial prefix first
+                            if (dialPrefix != null && number.startsWith(dialPrefix))
+                                number = number.substring(dialPrefixLen);
 
-                        // a phone number with less than 4 digits???
-                        if (number.length() < 4)
-                            continue;
+                            // a phone number with less than 4 digits???
+                            if (number.length() < 4)
+                                continue;
 
-                        // fix number
-                        try {
-                            number = NumberValidator.fixNumber(context, number,
-                                    Authenticator.getDefaultAccountName(context), 0);
-                        }
-                        catch (Exception e) {
-                            Log.e(TAG, "unable to normalize number: " + number + " - skipping", e);
-                            // skip number
-                            continue;
-                        }
+                            // fix number
+                            try {
+                                number = NumberValidator.fixNumber(context, number,
+                                        Authenticator.getDefaultAccountName(context), 0);
+                            }
+                            catch (Exception e) {
+                                Log.e(TAG, "unable to normalize number: " + number + " - skipping", e);
+                                // skip number
+                                continue;
+                            }
 
-                        try {
-                            String hash = MessageUtils.sha1(number);
+                            try {
+                                String hash = MessageUtils.sha1(number);
 
-                            stm.clearBindings();
-                            stm.bindString(1, hash);
-                            stm.bindString(2, number);
-                            stm.bindString(3, name);
-                            stm.bindNull(4);
-                            stm.bindLong(5, phones.getLong(phones.getColumnIndex(BaseColumns._ID)));
-                            stm.executeInsert();
-                            count++;
-                        }
-                        catch (SQLiteConstraintException sqe) {
-                            // skip duplicate number
+                                stm.clearBindings();
+                                stm.bindString(1, hash);
+                                stm.bindString(2, number);
+                                stm.bindString(3, name);
+                                stm.bindNull(4);
+                                stm.bindLong(5, phones.getLong(phones.getColumnIndex(BaseColumns._ID)));
+                                stm.executeInsert();
+                                count++;
+                            }
+                            catch (SQLiteConstraintException sqe) {
+                                // skip duplicate number
+                            }
                         }
                     }
                 }
