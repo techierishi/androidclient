@@ -1400,7 +1400,7 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                  public void run() {
                      ContentValues v = new ContentValues(1);
                      v.put(Messages.ATTACHMENT_PREVIEW_PATH, dest.toString());
-
+                     Log.w ("Percorso: ",""+v.get(Messages.ATTACHMENT_PREVIEW_PATH));
                      getContentResolver().update(_uri, v, null, null);
                  }
              },

@@ -836,30 +836,32 @@ public class ComposeMessageFragment extends ListFragment implements
             final AlertDialog alert = builder.create();
             alert.show();
         }
-        criteria.setAccuracy(criteria.ACCURACY_FINE);
-        String provider = locationManager.getBestProvider(criteria, false);
-        LocationListener l = new LocationListener() {
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
+        else {
+            criteria.setAccuracy(criteria.ACCURACY_FINE);
+            String provider = locationManager.getBestProvider(criteria, false);
+            LocationListener l = new LocationListener() {
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
 
-            public void onProviderEnabled(String provider) {
-            }
+                public void onProviderEnabled(String provider) {
+                }
 
-            public void onProviderDisabled(String provider) {
-            }
+                public void onProviderDisabled(String provider) {
+                }
 
-            public void onLocationChanged(android.location.Location location) {
-                Log.w(TAG, "location = " + location.getLatitude() + ", " + location.getLongitude());
+                public void onLocationChanged(android.location.Location location) {
+                    Log.w(TAG, "location = " + location.getLatitude() + ", " + location.getLongitude());
 
-                locationManager.removeUpdates(this);
+                    locationManager.removeUpdates(this);
 
-                double lat = location.getLatitude();
-                double lon = location.getLongitude();
-                new TextMessageThread("Location", lat, lon).start();
-            }
-        };
+                    double lat = location.getLatitude();
+                    double lon = location.getLongitude();
+                    new TextMessageThread("Location", lat, lon).start();
+                }
+            };
 
-        locationManager.requestLocationUpdates(provider, 0, 0, l);
+            locationManager.requestLocationUpdates(provider, 0, 0, l);
+        }
 	}
 
 	private void showSmileysPopup(View anchor) {
