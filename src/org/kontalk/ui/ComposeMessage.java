@@ -41,11 +41,13 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -58,7 +60,7 @@ import android.widget.Toast;
  * @author Daniele Ricci
  * @version 1.0
  */
-public class ComposeMessage extends ActionBarActivity {
+public class ComposeMessage extends ActionBarActivity implements FragmentParent {
     private static final String TAG = ComposeMessage.class.getSimpleName();
 
     private static final int REQUEST_CONTACT_PICKER = 9721;
@@ -99,6 +101,14 @@ public class ComposeMessage extends ActionBarActivity {
         mSubtitleView = (TextView) customView.findViewById(R.id.summary);
 
         processIntent(savedInstanceState);
+    }
+
+    @Override
+    public void onChildClose(Fragment fragment) {
+        View v = mFragment.getView().findViewById(R.id.drawer);
+        LayoutParams p=v.getLayoutParams();
+        p.height=0;
+        v.setLayoutParams(p);
     }
 
     @TargetApi(android.os.Build.VERSION_CODES.HONEYCOMB)

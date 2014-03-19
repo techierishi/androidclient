@@ -18,6 +18,7 @@
 
 package org.kontalk.ui;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +28,7 @@ import org.kontalk.data.Contact;
 import org.kontalk.message.AttachmentComponent;
 import org.kontalk.message.CompositeMessage;
 import org.kontalk.message.ImageComponent;
+import org.kontalk.message.LocationComponent;
 import org.kontalk.message.TextComponent;
 import org.kontalk.provider.MyMessages.Messages;
 import org.kontalk.util.MessageUtils;
@@ -34,6 +36,7 @@ import org.kontalk.util.MessageUtils.SmileyImageSpan;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -362,6 +365,23 @@ public class MessageListItem extends RelativeLayout {
 
                 }
 
+            }
+            else {
+                  LocationComponent loc = (LocationComponent) mMessage.getComponent(LocationComponent.class);
+                  if (loc != null) {
+                      String placeholder = "Map";
+                      buf.insert(0, placeholder);
+                      try {
+                          File preview = loc.getCachedMap();
+                          Bitmap bitmap = BitmapFactory.decodeFile(preview.getAbsolutePath() /*"/data/data/org.kontalk/cache/41.771848_12.303395.png"*/);
+                          if (bitmap != null) {
+                              ImageSpan imgSpan = new MaxSizeImageSpan(getContext(), bitmap);
+                              buf.setSpan(imgSpan, 0, placeholder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                          }
+                      } catch (Exception e) {
+
+                      }
+                  }
             }
 
         }

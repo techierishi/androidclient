@@ -316,7 +316,6 @@ public class MessagingNotification {
                 CharSequence last = convs.get(peer)[1];
 
                 if (unread == 1 && previewPath != null) {
-                    Log.d ("PATH",previewPath);
                     Bitmap b=BitmapFactory.decodeFile(previewPath);
                     style = new BigPictureStyle();
                     ((BigPictureStyle) style).bigPicture(b);

@@ -72,6 +72,8 @@ import com.google.android.gcm.GCMRegistrar;
 public final class MessagingPreferences extends PreferenceActivity {
     private static final String TAG = MessagingPreferences.class.getSimpleName();
 
+    private static final float DEFAULT_DRAWER_HEIGHT = 200;
+
     private static final int REQUEST_PICK_BACKGROUND = Activity.RESULT_FIRST_USER + 1;
 
     private static Drawable customBackground;
@@ -559,6 +561,17 @@ public final class MessagingPreferences extends PreferenceActivity {
 
     public static String getPushSenderId(Context context) {
         return getString(context, "pref_push_sender", null);
+    }
+
+    public static int getDrawerHeight (Context context) {
+        return getInt(context, "pref_drawer_height", MessageUtils.getDensityPixel(context, DEFAULT_DRAWER_HEIGHT));
+    }
+
+    public static boolean setDrawerHeight (Context context, int height) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.edit()
+            .putInt("pref_drawer_height", height)
+            .commit();
     }
 
     public static boolean setPushSenderId(Context context, String senderId) {

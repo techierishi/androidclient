@@ -18,7 +18,11 @@
 
 package org.kontalk.message;
 
+import java.io.File;
+
 import org.kontalk.crypto.Coder;
+
+import android.util.Log;
 
 
 
@@ -28,9 +32,10 @@ import org.kontalk.crypto.Coder;
  * @author Andrea Cappelli
  */
 public class LocationComponent extends MessageComponent <Location> {
-
-    public LocationComponent(double lat, double lon) {
+    private File mCachedMap;
+    public LocationComponent(double lat, double lon, File cachedMap) {
         super(new Location(lat,lon), 0, false, Coder.SECURITY_CLEARTEXT);
+        mCachedMap = cachedMap;
     }
 
     public double getLatitude() {
@@ -39,5 +44,10 @@ public class LocationComponent extends MessageComponent <Location> {
 
     public double getLongitude() {
         return mContent.getLongitude();
+    }
+
+    public File getCachedMap () {
+        Log.w ("PATH",""+mCachedMap.getAbsolutePath());
+        return mCachedMap;
     }
 }

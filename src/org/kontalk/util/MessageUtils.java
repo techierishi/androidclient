@@ -198,7 +198,7 @@ public final class MessageUtils {
         return act;
     }
 
-    private static int getDensityPixel(Context context, float dp) {
+    public static int getDensityPixel(Context context, float dp) {
         return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 

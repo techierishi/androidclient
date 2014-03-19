@@ -62,6 +62,7 @@ import org.kontalk.util.MessageUtils.SmileyImageSpan;
 import org.spongycastle.openpgp.PGPPublicKey;
 import org.spongycastle.openpgp.PGPPublicKeyRing;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.AsyncQueryHandler;
@@ -81,14 +82,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.location.Criteria;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract.Contacts;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
@@ -106,6 +106,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -182,6 +184,9 @@ public class ComposeMessageFragment extends ListFragment implements
     private CharSequence mCurrentStatus;
     private TextWatcher mChatStateListener;
     private AdapterView.OnItemClickListener mSmileySelectListener;
+
+    private MyMapFragment mLocationFragment;
+
 
     private static final class PresenceData {
         public String status;
@@ -329,6 +334,20 @@ public class ComposeMessageFragment extends ListFragment implements
                 showSmileysPopup(v);
             }
         });
+
+        final View root=getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+             public void onGlobalLayout(){
+                   int heightDiff = root.getRootView().getHeight()-
+                   (root.getHeight()+getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getTop());
+                   Log.d(TAG,root.getRootView().getHeight()+" - "
+                   +(root.getHeight()+getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getTop())
+                   +" = "+heightDiff);
+
+                   if (heightDiff > 0)
+                       MessagingPreferences.setDrawerHeight(getActivity(), heightDiff);
+             }
+         });
 
 		Configuration config = getResources().getConfiguration();
 		onKeyboardStateChanged(config.keyboardHidden == KEYBOARDHIDDEN_NO);
@@ -552,7 +571,7 @@ public class ComposeMessageFragment extends ListFragment implements
                     }
                     else {
                         MessageCenterService.sendLocationMessage(getActivity(),
-                                userId, "Location", mLatitude, mLongitude, MessagingPreferences
+                                userId, mText, mLatitude, mLongitude, MessagingPreferences
                                     .getEncryptionEnabled(getActivity()),
                                 ContentUris.parseId(newMsg));
                     }
@@ -588,8 +607,15 @@ public class ComposeMessageFragment extends ListFragment implements
 
 		    offlineModeWarning();
 
-			// start thread
-			new TextMessageThread(text).start();
+		    if (mLocationFragment != null) {
+		        Location l = mLocationFragment.getMap().getMyLocation();
+		        new TextMessageThread(text, l.getLatitude(), l.getLongitude()).start();
+		    }
+
+		    else {
+		        // start thread
+		        new TextMessageThread(text).start();
+		    }
 
 			if (fromTextEntry) {
 	            // empty text
@@ -822,8 +848,25 @@ public class ComposeMessageFragment extends ListFragment implements
         startActivityForResult(i, SELECT_ATTACHMENT_CONTACT);
 	}
 
+	@SuppressLint("NewApi")
 	private void selectLocationAttachment() {
-	    final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+	    /*InputMethodManager input = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+	    input.hideSoftInputFromWindow(getView().getWindowToken(), 0);*/
+
+        View v=getActivity().findViewById(R.id.drawer);
+        LayoutParams p=v.getLayoutParams();
+        p.height=MessagingPreferences.getDrawerHeight(getActivity());
+        v.setLayoutParams(p);
+
+        mLocationFragment= new MyMapFragment();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.drawer, mLocationFragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.addToBackStack(null);
+        ft.commit();
+        mSendButton.setEnabled(true);
+
+	    /*final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             // TODO i18n
@@ -868,7 +911,7 @@ public class ComposeMessageFragment extends ListFragment implements
             };
 
             locationManager.requestLocationUpdates(provider, 0, 0, l);
-        }
+        }*/
 	}
 
 	private void showSmileysPopup(View anchor) {

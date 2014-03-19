@@ -939,6 +939,8 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                 Messages.ATTACHMENT_PREVIEW_PATH,
                 Messages.ATTACHMENT_LENGTH,
                 // TODO Messages.ATTACHMENT_SECURITY_FLAGS,
+                Messages.GEO_LATITUDE,
+                Messages.GEO_LONGITUDE,
             },
             filter.toString(),
             null, Messages._ID);
@@ -983,6 +985,13 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                 b.putString("org.kontalk.message.media.uri", attFileUri);
                 b.putString("org.kontalk.message.preview.path", attPreviewPath);
                 b.putLong("org.kontalk.message.length", attLength);
+            }
+
+            if (!c.isNull(9)){
+                double lat = c.getDouble(9);
+                double lon = c.getDouble(10);
+                b.putDouble("org.kontalk.message.geo_lat", lat);
+                b.putDouble("org.kontalk.message.geo_lon", lon);
             }
 
             Log.v(TAG, "resending pending message " + id);
@@ -1399,6 +1408,8 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                      v.put(Messages.ATTACHMENT_PREVIEW_PATH, dest.toString());
                      Log.w ("Percorso: ",""+v.get(Messages.ATTACHMENT_PREVIEW_PATH));
                      getContentResolver().update(_uri, v, null, null);
+
+                     MessagingNotification.delayedUpdateMessagesNotification(getApplicationContext(), false);
                  }
              },
 
@@ -2601,7 +2612,7 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                         UserLocation location = (UserLocation) _location;
                         msg.addComponent(new LocationComponent
                                 (location.getLatitude(),
-                                 location.getLongitude()));
+                                 location.getLongitude(), null));
                     }
 
                     if (msg != null) {

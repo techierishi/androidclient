@@ -348,7 +348,9 @@ public class CompositeMessage {
 	        if (!c.isNull(COLUMN_GEO_LATITUDE)) {
 	            double lat = c.getDouble(COLUMN_GEO_LATITUDE);
 	            double lon = c.getDouble(COLUMN_GEO_LONGITUDE);
-	            LocationComponent location = new LocationComponent(lat, lon);
+	            String attPreview = c.getString(COLUMN_ATTACHMENT_PREVIEW_PATH);
+	            File previewFile = (attPreview != null) ? new File(attPreview) : null;
+	            LocationComponent location = new LocationComponent(lat, lon, previewFile);
 	            addComponent(location);
 	        }
 
