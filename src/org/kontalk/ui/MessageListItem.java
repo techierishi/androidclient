@@ -373,7 +373,7 @@ public class MessageListItem extends RelativeLayout {
                       buf.insert(0, placeholder);
                       try {
                           File preview = loc.getCachedMap();
-                          Bitmap bitmap = BitmapFactory.decodeFile(preview.getAbsolutePath() /*"/data/data/org.kontalk/cache/41.771848_12.303395.png"*/);
+                          Bitmap bitmap = BitmapFactory.decodeFile(preview.getAbsolutePath());
                           if (bitmap != null) {
                               ImageSpan imgSpan = new MaxSizeImageSpan(getContext(), bitmap);
                               buf.setSpan(imgSpan, 0, placeholder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -22,8 +22,6 @@ import java.io.File;
 
 import org.kontalk.crypto.Coder;
 
-import android.util.Log;
-
 
 
 /**
@@ -33,6 +31,7 @@ import android.util.Log;
  */
 public class LocationComponent extends MessageComponent <Location> {
     private File mCachedMap;
+
     public LocationComponent(double lat, double lon, File cachedMap) {
         super(new Location(lat,lon), 0, false, Coder.SECURITY_CLEARTEXT);
         mCachedMap = cachedMap;
@@ -47,7 +46,6 @@ public class LocationComponent extends MessageComponent <Location> {
     }
 
     public File getCachedMap () {
-        Log.w ("PATH",""+mCachedMap.getAbsolutePath());
         return mCachedMap;
     }
 }

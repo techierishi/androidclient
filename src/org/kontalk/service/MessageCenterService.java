@@ -1406,7 +1406,6 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                  public void run() {
                      ContentValues v = new ContentValues(1);
                      v.put(Messages.ATTACHMENT_PREVIEW_PATH, dest.toString());
-                     Log.w ("Percorso: ",""+v.get(Messages.ATTACHMENT_PREVIEW_PATH));
                      getContentResolver().update(_uri, v, null, null);
 
                      MessagingNotification.delayedUpdateMessagesNotification(getApplicationContext(), false);
@@ -2610,9 +2609,33 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                     PacketExtension _location = m.getExtension(UserLocation.ELEMENT_NAME, UserLocation.NAMESPACE);
                     if (_location != null && _location instanceof UserLocation) {
                         UserLocation location = (UserLocation) _location;
-                        msg.addComponent(new LocationComponent
+                        GMStaticUrlBuilder url = new GMStaticUrlBuilder()
+                        .setCenter(location.getLatitude(), location.getLongitude())
+                        .setMapType("roadmap")
+                        .setMarker("red", '\0', location.getLatitude(), location.getLongitude())
+                        .setSensor(false)
+                        .setSize(600, 300)
+                        .setZoom(13);
+
+                         final File dest = new File(getCacheDir(), String.format(Locale.US, "%f", location.getLatitude())
+                                 + "_"
+                                 + String.format(Locale.US, "%f", location.getLongitude())+ ".png");
+                         new HttpDownload(url.toString(), dest, new Runnable() {
+                             public void run() {
+                                 ContentValues v = new ContentValues(1);
+                                 v.put(Messages.ATTACHMENT_PREVIEW_PATH, dest.getAbsolutePath());
+                             }
+                         },
+                         new Runnable() {
+                             public void run() {
+                                 // TODO
+                             }
+                         })
+                         .start();
+
+                         msg.addComponent(new LocationComponent
                                 (location.getLatitude(),
-                                 location.getLongitude(), null));
+                                 location.getLongitude(), dest));
                     }
 
                     if (msg != null) {
