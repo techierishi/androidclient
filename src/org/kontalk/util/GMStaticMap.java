@@ -48,21 +48,12 @@ public class GMStaticMap {
         if (dest.isFile())
             return dest;
 
-        GMStaticUrlBuilder url = new GMStaticUrlBuilder()
-            .setCenter(lat, lon)
-            .setMapType(GM_MAP_TYPE)
-            .setMarker(GM_MARKER_COLOR, GM_MARKER_LABEL, lat, lon)
-            .setSensor(GM_SENSOR)
-            .setSize(GM_MAP_WIDTH, GM_MAP_HEIGHT)
-            .setZoom(GM_MAP_ZOOM);
-
         // queue the download
-        queueDownload(url.toString(), filename, dest, listener);
-
+        queueDownload(lat, lon, filename, dest, listener);
         return null;
     }
 
-    private void queueDownload(String url, final String id, final File destination,
+    private void queueDownload(double lat, double lon, final String id, final File destination,
             GMStaticMapListener listener) {
 
         boolean start = false;
@@ -79,8 +70,16 @@ public class GMStaticMap {
             listeners.add(listener);
         }
 
-        if (start)
-            new HttpDownload(url, destination,
+        if (start) {
+            GMStaticUrlBuilder url = new GMStaticUrlBuilder()
+                .setCenter(lat, lon)
+                .setMapType(GM_MAP_TYPE)
+                .setMarker(GM_MARKER_COLOR, GM_MARKER_LABEL, lat, lon)
+                .setSensor(GM_SENSOR)
+                .setSize(GM_MAP_WIDTH, GM_MAP_HEIGHT)
+                .setZoom(GM_MAP_ZOOM);
+
+            new HttpDownload(url.toString(), destination,
                 new Runnable() {
                     public void run() {
                         completed(id, destination);
@@ -92,6 +91,7 @@ public class GMStaticMap {
                     }
                 })
             .start();
+        }
     }
 
     public void completed(String id, File destination) {
