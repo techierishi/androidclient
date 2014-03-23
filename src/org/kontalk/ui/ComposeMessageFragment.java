@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -31,11 +32,14 @@ import java.util.regex.Pattern;
 
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.ChatState;
+import org.kontalk.Kontalk;
 import org.kontalk.R;
 import org.kontalk.authenticator.Authenticator;
 import org.kontalk.client.EndpointServer;
 import org.kontalk.crypto.Coder;
+import org.kontalk.crypto.DecryptException;
 import org.kontalk.crypto.PGP;
+import org.kontalk.crypto.PersonalKey;
 import org.kontalk.data.Contact;
 import org.kontalk.data.Conversation;
 import org.kontalk.message.AttachmentComponent;
@@ -43,6 +47,7 @@ import org.kontalk.message.CompositeMessage;
 import org.kontalk.message.ImageComponent;
 import org.kontalk.message.LocationComponent;
 import org.kontalk.message.MessageComponent;
+import org.kontalk.message.RawComponent;
 import org.kontalk.message.TextComponent;
 import org.kontalk.message.VCardComponent;
 import org.kontalk.provider.MessagesProvider;
@@ -58,6 +63,7 @@ import org.kontalk.sync.Syncer;
 import org.kontalk.ui.IconContextMenu.IconContextMenuOnClickListener;
 import org.kontalk.util.MediaStorage;
 import org.kontalk.util.MessageUtils;
+import org.kontalk.util.XMPPUtils;
 import org.kontalk.util.MessageUtils.SmileyImageSpan;
 import org.spongycastle.openpgp.PGPPublicKey;
 import org.spongycastle.openpgp.PGPPublicKeyRing;
@@ -956,34 +962,25 @@ public class ComposeMessageFragment extends ListFragment implements
 	}
 
 	private void decryptMessage(CompositeMessage msg) {
-		/*
-		try {
-			Context ctx = getActivity();
+	    try {
+	    	Context ctx = getActivity();
 
-	        PersonalKey key = ((Kontalk)ctx.getApplicationContext())
-	            .getPersonalKey();
-	        EndpointServer server = MessagingPreferences.getEndpointServer(ctx);
-	        Coder coder = UsersProvider.getDecryptCoder(ctx, server, key, msg.getSender(true));
+            MessageUtils.decryptMessage(ctx, null, msg);
 
-			// decrypt the message
-			msg.decrypt(coder);
-			// update database
-			final byte[] content = msg.getBinaryContent();
-			ContentValues values = new ContentValues();
-			values.put(Messages.CONTENT, content);
-			values.put(Messages.ENCRYPTED, false);
-			values.put(Messages.LENGTH, content.length);
-			getActivity().getContentResolver().update(
-					Messages.getUri(msg.getId()), values, null, null);
-		} catch (Exception e) {
-			Log.e(TAG, "unable to decrypt message", e);
-			Toast.makeText(getActivity(), "Decryption failed!",
-					Toast.LENGTH_LONG).show();
-		}
-		*/
-		// TODO implement decrypt message
-		Toast.makeText(getActivity(), "Not implemented.",
-				Toast.LENGTH_LONG).show();
+            // write updated data to the database
+            ContentValues values = new ContentValues();
+            MessageUtils.fillContentValues(values, msg);
+
+            ctx.getContentResolver().update(Messages.getUri(msg.getId()),
+            		values, null, null);
+        }
+        catch (Exception e) {
+            Log.e(TAG, "decryption failed", e);
+
+            // TODO i18n
+            Toast.makeText(getActivity(), "Decryption failed!",
+                    Toast.LENGTH_LONG).show();
+        }
 	}
 
 	private void retryMessage(CompositeMessage msg) {
@@ -2118,7 +2115,9 @@ public class ComposeMessageFragment extends ListFragment implements
 		if (threadId > 0) {
 
 		    // no draft and no messages - delete conversation
-		    if (len == 0 && mConversation.getMessageCount() == 0) {
+		    if (len == 0 && mConversation.getMessageCount() == 0 &&
+		            mConversation.getRequestStatus() != Threads.REQUEST_WAITING) {
+
 		        // FIXME shouldn't be faster to just delete the thread?
 		        MessagesProvider.deleteThread(getActivity(), threadId);
 		    }
