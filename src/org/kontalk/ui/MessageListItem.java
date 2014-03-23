@@ -31,9 +31,13 @@ import org.kontalk.message.ImageComponent;
 import org.kontalk.message.LocationComponent;
 import org.kontalk.message.TextComponent;
 import org.kontalk.provider.MyMessages.Messages;
+import org.kontalk.util.GMStaticMap;
+import org.kontalk.util.GMStaticMap.GMStaticMapListener;
 import org.kontalk.util.MessageUtils;
 import org.kontalk.util.MessageUtils.SmileyImageSpan;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -371,16 +375,41 @@ public class MessageListItem extends RelativeLayout {
                   if (loc != null) {
                       String placeholder = "Map";
                       buf.insert(0, placeholder);
-                      try {
-                          File preview = loc.getCachedMap();
-                          Bitmap bitmap = BitmapFactory.decodeFile(preview.getAbsolutePath());
-                          if (bitmap != null) {
-                              ImageSpan imgSpan = new MaxSizeImageSpan(getContext(), bitmap);
-                              buf.setSpan(imgSpan, 0, placeholder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                      // add newline if there is some text after
+                      if (!thumbnailOnly)
+                          buf.insert(placeholder.length(), "\n");
+
+                      final long msgId = mMessage.getDatabaseId();
+                      File map = GMStaticMap.getInstance(getContext())
+                          .requestMap(loc.getLatitude(), loc.getLongitude(), new GMStaticMapListener() {
+                            public void completed(File destination) {
+                                ContentValues v = new ContentValues(1);
+                                v.put(Messages.ATTACHMENT_PREVIEW_PATH, destination.toString());
+                                getContext().getContentResolver().update(ContentUris
+                                    .withAppendedId(Messages.CONTENT_URI,
+                                    msgId), v, null, null);
+                            }
+
+                            public void error(File destination) {
+                            }
+                        });
+
+                      if (map != null) {
+
+                          try {
+                              Bitmap bitmap = BitmapFactory.decodeFile(map.getAbsolutePath());
+                              if (bitmap != null) {
+                                  ImageSpan imgSpan = new MaxSizeImageSpan(getContext(), bitmap);
+                                  buf.setSpan(imgSpan, 0, placeholder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                              }
                           }
-                      } catch (Exception e) {
+                          catch (Exception e) {
+
+                          }
 
                       }
+
                   }
             }
 

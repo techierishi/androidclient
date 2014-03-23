@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -66,7 +65,6 @@ import org.kontalk.client.BitsOfBinary;
 import org.kontalk.client.BlockingCommand;
 import org.kontalk.client.E2EEncryption;
 import org.kontalk.client.EndpointServer;
-import org.kontalk.client.HttpDownload;
 import org.kontalk.client.KontalkConnection;
 import org.kontalk.client.OutOfBandData;
 import org.kontalk.client.Ping;
@@ -106,7 +104,8 @@ import org.kontalk.service.KeyPairGeneratorService.PersonalKeyRunnable;
 import org.kontalk.service.XMPPConnectionHelper.ConnectionHelperListener;
 import org.kontalk.ui.MessagingNotification;
 import org.kontalk.ui.MessagingPreferences;
-import org.kontalk.util.GMStaticUrlBuilder;
+import org.kontalk.util.GMStaticMap;
+import org.kontalk.util.GMStaticMap.GMStaticMapListener;
 import org.kontalk.util.MediaStorage;
 import org.kontalk.util.MessageUtils;
 import org.kontalk.util.RandomString;
@@ -1310,35 +1309,25 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
         LocationComponent _location = (LocationComponent) msg.getComponent(LocationComponent.class);
         if (_location instanceof LocationComponent) {
             LocationComponent location = _location;
-            GMStaticUrlBuilder url = new GMStaticUrlBuilder()
-            .setCenter(location.getLatitude(), location.getLongitude())
-            .setMapType("roadmap")
-            .setMarker("red", '\0', location.getLatitude(), location.getLongitude())
-            .setSensor(false)
-            .setSize(600, 300)
-            .setZoom(13);
 
-             final File dest = new File(getCacheDir(), String.format(Locale.US, "%f", location.getLatitude())
-                     + "_"
-                     + String.format(Locale.US, "%f", location.getLongitude())+ ".png");
-             final Uri _uri = msgUri;
+            final Uri _uri = msgUri;
 
-             new HttpDownload(url.toString(), dest, new Runnable() {
-                 public void run() {
-                     ContentValues v = new ContentValues(1);
-                     v.put(Messages.ATTACHMENT_PREVIEW_PATH, dest.toString());
-                     getContentResolver().update(_uri, v, null, null);
+            GMStaticMap.getInstance(this).requestMap(
+                location.getLatitude(),
+                location.getLongitude(),
+                new GMStaticMapListener() {
+                public void completed(File destination) {
+                    ContentValues v = new ContentValues(1);
+                    v.put(Messages.ATTACHMENT_PREVIEW_PATH, destination.toString());
+                    getContentResolver().update(_uri, v, null, null);
 
-                     MessagingNotification.delayedUpdateMessagesNotification(getApplicationContext(), false);
-                 }
-             },
+                    MessagingNotification.delayedUpdateMessagesNotification
+                        (getApplicationContext(), false);
+                }
 
-             new Runnable() {
-                 public void run() {
-                     // TODO
-                 }
-             })
-             .start();
+                public void error(File destination) {
+                }
+            });
         }
 
         // mark sender as registered in the users database
@@ -2445,33 +2434,10 @@ public class MessageCenterService extends Service implements ConnectionHelperLis
                     PacketExtension _location = m.getExtension(UserLocation.ELEMENT_NAME, UserLocation.NAMESPACE);
                     if (_location != null && _location instanceof UserLocation) {
                         UserLocation location = (UserLocation) _location;
-                        GMStaticUrlBuilder url = new GMStaticUrlBuilder()
-                        .setCenter(location.getLatitude(), location.getLongitude())
-                        .setMapType("roadmap")
-                        .setMarker("red", '\0', location.getLatitude(), location.getLongitude())
-                        .setSensor(false)
-                        .setSize(600, 300)
-                        .setZoom(13);
-
-                         final File dest = new File(getCacheDir(), String.format(Locale.US, "%f", location.getLatitude())
-                                 + "_"
-                                 + String.format(Locale.US, "%f", location.getLongitude())+ ".png");
-                         new HttpDownload(url.toString(), dest, new Runnable() {
-                             public void run() {
-                                 ContentValues v = new ContentValues(1);
-                                 v.put(Messages.ATTACHMENT_PREVIEW_PATH, dest.getAbsolutePath());
-                             }
-                         },
-                         new Runnable() {
-                             public void run() {
-                                 // TODO
-                             }
-                         })
-                         .start();
 
                          msg.addComponent(new LocationComponent
                                 (location.getLatitude(),
-                                 location.getLongitude(), dest));
+                                 location.getLongitude(), null));
                     }
 
                     if (msg != null) {

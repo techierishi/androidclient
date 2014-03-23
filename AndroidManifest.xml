@@ -63,7 +63,7 @@
         android:theme="@style/Theme.Light"
         android:allowBackup="true">
 
-        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="TE_LO_STO_PE_DI" />
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCXBmXiUCI4Xykhe-Un-CKlpDYEQUTgisg" />
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
         <!-- Services -->
