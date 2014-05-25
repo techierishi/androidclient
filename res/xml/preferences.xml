@@ -148,6 +148,9 @@
         <Preference android:key="pref_export_keypair"
             android:summary="@string/pref_title_export_keypair"
             android:title="@string/pref_export_keypair"/>
+        <Preference android:key="pref_show_key_passphrase"
+            android:summary="@string/pref_title_show_key_passphrase"
+            android:title="@string/pref_show_key_passphrase" />
     </PreferenceCategory>
 
     <PreferenceCategory android:key="pref_other"

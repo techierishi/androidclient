@@ -29,6 +29,7 @@ import org.kontalk.util.Preferences;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -143,6 +144,26 @@ public final class PreferencesActivity extends PreferenceActivity {
                 return true;
             }
         });
+
+        // show passphrase
+		final Preference showKeyPassphrase = findPreference("pref_show_key_passphrase");
+		showKeyPassphrase.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+		    public boolean onPreferenceClick(Preference preference) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(PreferencesActivity.this);
+				builder.setCancelable(false);
+				builder.setMessage(((Kontalk)getApplicationContext()).getCachedPassphrase());
+				builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+			        }
+				});
+				AlertDialog alert = builder.create();
+				alert.show();
+				return true;
+			}
+
+		});
 
         // use custom background
         final Preference customBg = findPreference("pref_custom_background");
